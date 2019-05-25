@@ -18,7 +18,7 @@ mongoClient.connect(function(err, client) {
 
     let user1 = {phone:"+79268507245", name:"Tom", rating:5};
     let driver1 = {name:"Sasha", experience:5, rating:4, age: 25, count_drive: 10};
-    let orders1 = {client_id:1, driver_id:1, time_start: }
+    let orders1 = {client_id:1, driver_id:1, time_start: 10};
 
 
     
