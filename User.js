@@ -1,4 +1,6 @@
-class User {
+module.exports = class User {
+
+
 
     constructor(name, phone,rating, age) {
       const MAX_RATING = 5;
@@ -8,38 +10,46 @@ class User {
       let _phone = phone;
       let _rating = rating;
       let _age = age;
-    }
+      
+      this.getName = function() {
+        return _name;
+      }
+      this.getPhone = function() {
+        return _phone;
+      }
+      this.getRating = function() {
+        return _rating;
+      }
+      this.getAge = function() {
+        return _age;
+      }
 
-    getName() {return _name;}
-    getPhone() {return _phone;}
-    getRating() {return _rating;}
-    getAge() {return _age;}
-
-    setRating(rating) {
-      if(typeof rating === "number" 
+      this.setName = function(name) {
+        if(typeof name === "string") { _name = name;}
+      }
+      this.setPhone = function(phone) {
+        if(typeof phone === "string" && 
+        (phone.length == COUNT_PHONE || (phone.length == COUNT_PHONE+1 
+         && phone.charAt(0) === "+" && phone.charAt(1) === "7"))) {
+             _phone = phone;
+          }
+      }
+      this.setRating = function(rating) {
+        if(typeof rating === "number" 
         && rating <= MAX_RATING 
         && rating >= 0) {
             _rating = rating;
+        }
       }
-  }
-
-  setPhone(phone) {
-    if(typeof phone === "string" && 
-       (phone.length == COUNT_PHONE || (phone.length == COUNT_PHONE+1 
-        && phone.charAt(0) === "+" && phone.charAt(1)!== "8"))) {
-            _phone = phone;
+      this.setAge = function(age) {
+        if(typeof age === "number" && age <= MAX_AGE && age > 0) {
+            _age = age;
+        }
+      }
+    
     }
-  }
 
-  setName(name) {
-    if(typeof name === "string") { _name = name;}
-  }
-  setAge(age) {
-    if(typeof age === "number" && age <= MAX_AGE && age > 0) {
-
-    }
-  }
-
+    
   insert(client, obj) {
       client.insertOne(obj,function(err, result) {
           if(err) return console.log(err);
@@ -55,4 +65,4 @@ class User {
 
   }
 
-}
+};

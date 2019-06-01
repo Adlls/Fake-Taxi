@@ -15,29 +15,26 @@
 <body>
 
 <div class="container">
-<form class = "main_forms" method="post" action="/register">
+<form class = "main_forms" method="post" action="/auth">
   <div class="form-row">
     <div class="col-md-4 mb-3">
-      <label for="validationDefault01">Имя</label>
-      <input type="text" class="form-control" id="validationDefault01" placeholder="Имя" value="Mark" name="userName" required>
+      <label for="validationDefault01">Логин</label>
+      <input type="text" class="form-control" id="validationDefault01" placeholder="login" value="" name="login" required>
     </div>
    
     
   </div>
   <div class="form-row">
     <div class="col-md-6 mb-3">
-      <label for="validationDefault03">Адрес</label>
-      <input type="text" class="form-control" id="validationDefault03" placeholder="City" name="address" required>
+      <label for="validationDefault03">Пароль</label>
+      <input type="password" class="form-control" id="validationDefault03" placeholder="password" name="pass" required>
     </div>
 
-    <div class="col-md-6 mb-3">
-      <label for="validationDefault03">Время</label>
-      <input type="datetime-local" class="form-control" id="valdationDefault03" placeholder="" name="time" required>
-    </div>
+  
    
   </div>
  
-  <button class="btn btn-primary" type="submit">Вызвать трезвого водителя</button>
+  <button class="btn btn-primary" type="submit">Зайти</button>
 </form>
 
 </div>
