@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/styles/index.css">
+  <link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="styles/font-awesome/css/font-awesome.min.css">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Окно заказа</title>
+</head>
+<body onload="draw();">
+  <h2 class="orderw_title">Ожидайте водителя</h2>
+  <div id="Xclient" style="opacity: 1;">{{Xclient}}</div>
+  <div id="Yclient" style="opacity:1;">{{Yclient}}</div>
+  <div id="Xdriver"></div>
+  <div id="Ydriver"></div>
+  <div class="aboutorder">
+      <p>Ваш заказ номер: {{id_order}}</p>
+      <canvas id="GPS" width="350" height="150"></canvas>
+  </div>
+  <script>
+   function draw() {
+        let canvas = document.getElementById('GPS');
+        let Xclient = parseInt(document.getElementById('Xclient').innerHTML, 10);
+        let Yclient = parseInt(document.getElementById('Yclient').innerHTML, 10);
+      
+        if (canvas.getContext) {
+          let ctx = canvas.getContext('2d');
+          ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
+
+          //client
+          ctx.arc(Xclient, Yclient, 5, 0, Math.PI*2);
+          ctx.fill();
+
+          //driver
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+          ctx.arc(10, 10, 5, 0, Math.PI*2);
+
+          ctx.fill();
+          
+
+
+
+        }
+      }
+
+
+  </script>
+</body>
+</html>

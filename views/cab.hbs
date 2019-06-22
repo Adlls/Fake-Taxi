@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="/styles/index.css">
+  <link rel="stylesheet" type="text/css" href="/styles/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="styles/font-awesome/css/font-awesome.min.css">
+  <title>Fake taxi</title>
+</head>
+
+<style>
+  
+</style>
+<body>
+
+  <div class="container">
+    <div class="wrapper">
+    <div class="hand_welcome">
+        <h3>Welcome back, {{user}}</h3>
+        <button class="sign_out"><a href="/signout">sign out</a></button>
+    </div>
+    <div>{{driverX}} - x</div>
+    <div>{{driverY}} - y</div>
+
+    <div class="list_clients" class="center">
+      <h6>Список юзеров которые ожидают заказ:</h6>
+        <ul>
+          {{#each orders}}
+
+            {{#if this.active}}
+              <li>{{this.address}} - {{this.time_start}} <button ><a href="/toorder?orderid={{this._id}}">Откликнуться</a></button></li>
+            {{/if}}
+
+          {{/each}}
+        </ul>
+    </div>
+
+    </div>
+  </div>  
+</body>
+</html>

@@ -1,120 +1,249 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const urlencodedParser = bodyParser.urlencoded({extended: false});
-const app = express();
-const DB = require("./DB");
-const process = require("process");
-//var mongoose = require("mongoose");
+const express = require('express');
+var session = require("express-session"),
+bodyParser = require("body-parser");
+var passport = require('passport')
+, LocalStrategy = require('passport-local').Strategy;
 
-// Configuring Passport
-var passport = require('passport');
-var expressSession = require('express-session');
-app.use(expressSession({secret: 'mySecretKey'}));
+const Dr = require('./Driver');
+const Client = require('./Client');
+const mongoose = require('mongoose');
+const app = express();
+let DriverLogin;
+mongoose.connect("mongodb://localhost:27017/fake_taxi", {useNewUrlParser:true});
+
+
+const Driver = mongoose.model('Driver',{
+  name: String,
+  exp: Number,
+  age: Number,
+  count_drive: Number,
+  login: String,
+  pass: String,
+  tel: Number,
+  active: Boolean
+});
+
+const User = mongoose.model('Client', {
+  phone: Number,
+  name: String,
+  rating: Number
+});
+
+const Order = mongoose.model('Order', {
+  client_id: Object,
+  driver_id: Object,
+  time_start: String,
+  time_finish: String,
+  active: Boolean,
+  price: Number,
+  distance: Number,
+  address: String,
+  x: Number,
+  y: Number
+});
+
+
+const urlencodedParser = bodyParser.urlencoded({extended: false});
+app.set("view engine","hbs");
+app.use("/login", express.static("public/auth.html"));
+app.use("/", express.static("public"));
+app.use("/order", express.static("public/order.html"));
+app.use(session({ secret: "cats" }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-let db = new DB("mongodb://localhost:27017/", (process.env.DB_NAME || "fake_taxi"));
-let dbClient;
-let Clients;
-let Drivers;
-let Orders;
-
-//console.log(db.getNameDB());
-
-passport.serializeUser(function(user, done) {
-  done(null, user._id);
+passport.serializeUser((user, done) => {
+  done(null, user.id);
 });
- 
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
+
+passport.deserializeUser((id, done) => {
+  Driver.findById(id, function(err, user) {
     done(err, user);
   });
 });
 
 
-db.getConnect().connect(function(err, client) {
-      dbClient = client;
-      const dbs = client.db(db.getNameDB());
-      Clients =  dbs.collection("clients");
-      Drivers =  dbs.collection("drivers");
-      Orders =   dbs.collection("orders");
-      app.listen(3000, () => {
-        console.log("Connect to server...");
-      })
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    Driver.findOne({ login: username }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false);
+      }
     
-});
-
-
-/*
-mongoClient.connect(function(err, client) {
-    const db = client.db("fake_taxi");
-    const clients = db.collection("clients");
-    const orders = db.collection("orders");
-    const drivers = db.collection("drivers");
-
-    let user1 = {phone:"+79268507245", name:"Tom", rating:5};
-    let driver1 = {name:"Sasha", experience:5, rating:4, age: 25, count_drive: 10};
-    let orders1 = {client_id:1, driver_id:1, time_start: 10};
-
-
-    
-    /*
-    clients.insertOne(user1,function(err, result) {
-      console.log(result.ops); 
-    });
-
-    drivers.insertOne(user1,function(err, result) {
-      console.log(result.ops); 
-    });
-
-    orders.insertOne(user1,function(err, result) {
-      console.log(result.ops); 
-    });
-
-    if(err) return console.log(err);
-    client.close();
-    
-});
-*/
-
-/*
-app.post("/register", urlencodedParser, function(request, response) {
-    if(!request.body) return response.sendStatus(400);
-    console.log(request.body);
-    response.send(` \{ Name: ${request.body.userName}, Address: ${request.body.address}, Time: ${request.body.time} \}`);
-});
-*/
-
-//initial static file
-app.use("/",express.static("views"));
-app.use("/auth",express.static("views/auth.html"));
-app.use("/order", express.static("views/order.html"));
-
-
-app.post("/auth", urlencodedParser, function(request, response) {
-      const {login, pass} = request.body;
-     
-      console.log(login);
-
-      Drivers.find({login}).toArray(function(err,res) {
-        if (err) console.log(err);
-        console.log(res);
-      });
+      if (!(user.pass === password)) {
+        return done(null, false);
+      }
       
-      response.send(login +" "+pass);
+      return done(null, user);
+    });
+  }
+));
+
+app.post('/login', (req, res) => {
+   DriverLogin = req.body.username;
+
+   console.log(DriverLogin);
+
+  Driver.findOne({login: DriverLogin}, (err, drivers) => {
+        let driver = new Dr(drivers.name, drivers.tel, drivers.rating, drivers.age);
+
+    Order.find({}, (err, orders) => {
+        console.log(driver.getX(0,200));
+        res.render('cab.hbs', { 
+        user: driver.getName(),
+        orders: orders,
+        driverX: driver.getX(0,200),
+        driverY: driver.getY(0,200)
+
+      });
+
+  });
+  Driver.findOneAndUpdate({login: DriverLogin}, {active: true}, (err, drivers) => {});
+
 });
 
-app.post("/order", urlencodedParser, function(request, response) {
-        response.send("kek");
+});
+
+
+//auth drivers in cab
+app.post('/login',
+  passport.authenticate('local', { successRedirect: '/cab',
+                                   failureRedirect: '/login'
+                                    })
+);
+// As with any middleware it is quintessential to call next()
+// if the user is authenticated
+
+var isAuthenticated = function (req, res, next) {
+  if (req.isAuthenticated())
+    return next();
+  res.redirect('/login');
+}
+
+
+
+app.get('/cab', isAuthenticated, function(req, res) {
+
+});
+
+/* Handle Logout */
+app.get('/signout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+  Driver.findOneAndUpdate({login: DriverLogin}, {active: false}, (err, res) => {});
+
+});
+
+function CreateOrder() {
+  Order.create({
+    client_id: req.idClient,
+    driver_id: null,
+    time_start: ClientTime,
+    time_finish: null,
+    active: true,
+    price: null,
+    distance: null,
+    address: ClientAddress,
+    x: Math.floor(client.getX(0,100)),
+    y: Math.floor(client.getY(0, 100))
+  }, function(err, order) {
+    res.render('orderw.hbs',{
+      id_order: order._id,
+      Xclient: client.getX(0,100),
+      Yclient: client.getY(0,100)
+    
+    });
+ 
+  });
+}
+
+app.post('/order', function(req, res) {
+
+  if(!req.body) return response.sendStatus(400);
+  req.idClient = null;
+  let ClientName = req.body.username;
+  let ClientPhone = req.body.phone;
+  let ClientAddress = req.body.address;
+  let ClientTime = req.body.time;
+  let client = new Client(ClientName, ClientPhone, 0,0);
+
+  User.find({phone: req.body.phone}, function(err, user) {
+//решить проблему с валидацией данных, с помощью созднанных мною классов
+//иногда могут возникать ошибки из-з неправильного формата данных
+//console.log(req.body.typeor);
+
+    let Xclientg = Math.floor(client.getX(0,150));
+    let Yclientg = Math.floor(client.getY(0,150));
+      
+        if(Object.keys(user).length == 0) {
+
+          User.create({
+            name: ClientName, 
+            phone: ClientPhone, 
+            rating: 0
+          }, function(err, user) {
+
+            req.idClient = user._id;
+            Order.create({
+              client_id: req.idClient,
+              driver_id: null,
+              time_start: ClientTime,
+              time_finish: null,
+              active: true,
+              price: null,
+              distance: null,
+              address: ClientAddress,
+              x: Xclientg,
+              y: Yclientg
+            }, function(err, order) {
+              res.render('orderw.hbs',{
+                id_order: order._id,
+                Xclient: Xclientg,
+                Yclient: Yclientg
+              
+              });
+          });
+        });
+      }
+        else { 
+          req.idClient = user[Object.keys(user).length-1]._id;
+        
+          Order.create({
+            client_id: req.idClient,
+            driver_id: null,
+            time_start: ClientTime,
+            time_finish: null,
+            active: true,
+            price: null,
+            distance: null,
+            address: ClientAddress,
+            x: Xclientg,
+            y: Yclientg
+          }, function(err, order) {
+            res.render('orderw.hbs',{
+              id_order: order._id,
+              Xclient: Xclientg,
+              Yclient: Yclientg
+            
+            });
+        });
+ 
+        }
+
+  });
+});
+
+app.get('/order', function(req, res) {
+    //ищем ближайшего водителя
+});
+
+
+app.listen(3000, () => {
+
 });
 
 
 
 
-
-// прослушиваем прерывание работы программы (ctrl-c)
-process.on("SIGINT", () => {
-  dbClient.close();
-  process.exit();
-});

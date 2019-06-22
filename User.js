@@ -50,19 +50,11 @@ module.exports = class User {
     }
 
     
-  insert(client, obj) {
-      client.insertOne(obj,function(err, result) {
-          if(err) return console.log(err);
-          console.log(result.ops);
-      });
+  getX(min, max) {
+    return Math.random() * (max - min) + min;
   }
-
-  delete(client, obj) {
-
-  }
-  
-  update(client, obj) {
-
+  getY(min, max) {
+    return Math.random() * (max - min) + min;
   }
 
 };

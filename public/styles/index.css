@@ -1,0 +1,63 @@
+
+.main_forms {
+  margin-top: 150px;
+}
+
+.wrapper {
+  margin: auto 0;
+  margin-top: 100px;
+  width: 100%;
+  text-align: center;
+}
+
+.click_user {
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 5%;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.hand_welcome {
+  margin-top: -90px;
+}
+
+ 
+  .sign_out {
+    background-color: white;
+    border: 1px solid black;
+  }
+
+  .list_clients {
+      margin-top: 100px;
+      float: left;
+  }
+  .list_clients ul {
+    float: left;
+  }
+  .main_forms input {
+    width: 60%;
+  }
+
+  .custom-control-label {
+      padding-left: 25px;
+  }
+
+  .container-fluid {
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+  
+
+.orderw_title {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.aboutorder {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#GPS {
+  border: 1px solid black;
+}

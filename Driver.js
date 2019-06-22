@@ -1,6 +1,8 @@
-class Driver extends User{
+const User = require('./User');
 
-    constructor(name, exp, rating, age, count_drive, login, password) {
+module.exports = class Driver extends User {
+
+    constructor(name, phone, rating, age) {
       super(name, phone, rating, age);
     }
 

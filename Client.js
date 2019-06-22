@@ -1,7 +1,9 @@
-class Client extends User {
+const User = require('./User');
 
-    constructor(name, phone,rating) {
+module.exports = class Client extends User {
+
+    constructor(name, phone, rating) {
       super(name, phone, rating);
     }
 
-}
+}       

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Fake Taxi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+	  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400" rel="stylesheet">
+	  <link href="https://fonts.googleapis.com/css?family=Didact+Gothic:300,400,500,900" rel="stylesheet">
+	  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="styles/index.css">
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="scripts/jquery.js"></script>
+</head>
+<body>
+
+<div class="container">
+<form class = "main_forms" method="post" action="/order">
+   
+      <label for="validationDefault01">Имя</label>
+      <input type="text" class="form-control" id="validationDefault01" placeholder="Имя" value="" name="username" required>
+  
+          <label for="validationDefault01">Телефон</label>
+          <input type="text" class="form-control" id="validationDefault01" placeholder="8(926)850-72-45" value="" name="phone" required>
+ 
+    
+
+      <label for="validationDefault03">Адрес</label>
+      <input type="text" class="form-control" id="validationDefault03" placeholder="City" name="address" required>
+  
+
+   
+      <label for="validationDefault03">Время</label>
+      <input type="time" class="form-control" id="valdationDefault03" placeholder="" name="time" required>
+   
+   <div class="form-check">
+  <input class="form-check-input" type="radio" name="typeor" id="exampleRadios1" value="auto" checked>
+  <label class="form-check-label" for="exampleRadios1">
+    Выбрать ближайшего водителя
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="typeor" id="exampleRadios2" value="customer">
+  <label class="form-check-label" for="exampleRadios2">
+    Водитель по выбору 
+  </label>
+</div>
+
+ 
+  <button class="btn btn-primary" style="margin-top: 10px;" type="submit">Вызвать трезвого водителя</button>
+</form>
+
+</div>
+
+<script src="scripts/index.js"> </script>
+</body>
+
+
+</html>
