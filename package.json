@@ -10,7 +10,7 @@
     "flash": "^1.1.0",
     "hbs": "^4.0.4",
     "mongo": "^0.1.0",
-    "mongoose": "^5.5.12",
+    "mongoose": "^5.7.5",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0"
   }
